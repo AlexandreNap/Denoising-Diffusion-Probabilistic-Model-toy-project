@@ -8,9 +8,10 @@ import numpy as np
 batch_size = 1024
 n_epochs = 100
 n_steps = 100
-lr = 0.001
+lr = 0.005
+beta_1 = 0.0001
+beta_t = 0.02
 device = "cuda"
-
 
 def train_and_denoise(img):
     print(img.shape)
@@ -18,8 +19,7 @@ def train_and_denoise(img):
     array = img / img.sum()
     data = array_to_toy_dataset(array, 10000)
     data = (data - data.mean(axis=0)) / data.std(axis=0)
-
-    diffuser, losses = train(data, batch_size, n_epochs, n_steps, lr, device)
+    diffuser, losses = train(data, beta_1, beta_t, batch_size, n_epochs, n_steps, lr, device)
 
     eval_data = torch.randn(512, 2)
     diffuser.model.eval()
@@ -42,6 +42,7 @@ def train_and_denoise(img):
 
 
 gr.Interface(fn=train_and_denoise,
-             inputs=gr.components.Image(image_mode="L", source="canvas", shape=None),
+             inputs=gr.components.Image(image_mode="L", source="canvas", brush_radius=2,
+                                        height=512, width=512, shape=None),
              outputs="plot",
              live=False).launch()
