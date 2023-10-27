@@ -7,12 +7,12 @@ from src.model import NoiseModel
 from src.ema import EMA
 
 
-def train(data, batch_size, n_epochs, n_steps, lr, device):
+def train(data,  beta_1, beta_t, batch_size, n_epochs, n_steps, lr, device):
     my_dataset = TensorDataset(torch.Tensor(data))
-    my_dataloader = DataLoader(my_dataset, batch_size=batch_size)
+    my_dataloader = DataLoader(my_dataset, batch_size=batch_size, shuffle=True)
 
     model = NoiseModel(n_steps)
-    diffuser = DiffusionModel(model, n_steps, 1e-4, 0.02, device)
+    diffuser = DiffusionModel(model, n_steps, beta_1, beta_t, device)
 
     ema = EMA(0.9)
     ema.register(diffuser.model)
