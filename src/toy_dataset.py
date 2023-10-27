@@ -23,7 +23,7 @@ def image_to_toy_dataset(path, n_samples, blur_radius=1):
     img = Image.open(path)
     img = img.convert('RGB')
     img = img.filter(ImageFilter.GaussianBlur(radius=blur_radius))
-    img = img.convert('P')
+    img = img.convert('L')
     img = 255 - np.asarray(img)
     array = img / img.sum()
     return array_to_toy_dataset(array, n_samples)
