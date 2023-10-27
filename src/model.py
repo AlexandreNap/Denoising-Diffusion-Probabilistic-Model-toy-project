@@ -6,23 +6,23 @@ class NoiseModel(nn.Module):
     def __init__(self, n_steps):
         super(NoiseModel, self).__init__()
         self.n_steps = n_steps
-        w = 256
-        t_w = 16
-        self.t_layer = nn.Sequential(nn.Linear(1, 16),
-                                  nn.Tanh(),
-                                  nn.Linear(16, t_w),
-                                  nn.Tanh())
+        w = 16
+        t_w = 1
+        self.t_layer = nn.Sequential(nn.Linear(1, t_w),
+                                  nn.ReLU(),
+                                  nn.Linear(t_w, t_w),
+                                  nn.ReLU())
+        
         self.layer1 = nn.Sequential(nn.Linear(t_w + 2, w),
-                                    nn.Tanh(),
+                                    nn.ReLU(),
                                     nn.Linear(w, w),
-                                    nn.Tanh())
-
+                                    nn.ReLU())
         self.layer2 = nn.Sequential(nn.Linear(w, w),
-                                    nn.Tanh(),
+                                    nn.ReLU(),
                                     nn.Linear(w, w),
-                                    nn.Tanh())
+                                    nn.ReLU())
         self.layer3 = nn.Sequential(nn.Linear(w + t_w, w),
-                                    nn.Tanh(),
+                                    nn.ReLU(),
                                     nn.Linear(w, w),
                                     nn.Tanh())
 
